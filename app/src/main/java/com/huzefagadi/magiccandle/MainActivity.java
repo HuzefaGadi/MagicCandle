@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.CountDownLatch;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
@@ -13,6 +14,7 @@ import android.hardware.Camera;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
@@ -21,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 
@@ -47,6 +51,21 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        else
+        {
+            View decorView = getWindow().getDecorView();
+// Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+// Remember that you should never show the action bar if the
+// status bar is hidden, so hide that too if necessary.
+            ActionBar actionBar = getActionBar();
+            actionBar.hide();
+        }
         setContentView(R.layout.activity_main);
         listOfImages = new ArrayList<Integer>();
         listOfImagesForSmoke = new ArrayList<Integer>();
@@ -59,6 +78,7 @@ public class MainActivity extends Activity {
         listOfImages.add(R.drawable.candle_fire4);
         listOfImages.add(R.drawable.candle_fire5);
         listOfImages.add(R.drawable.candle_fire6);
+        listOfImages.add(R.drawable.candle_fire7);
 
         listOfImagesForSmoke.add(R.drawable.smoke_1);
         listOfImagesForSmoke.add(R.drawable.smoke_2);
@@ -67,28 +87,14 @@ public class MainActivity extends Activity {
         listOfImagesForSmoke.add(R.drawable.smoke_5);
         listOfImagesForSmoke.add(R.drawable.smoke_6);
         listOfImagesForSmoke.add(R.drawable.smoke_7);
-        listOfImagesForSmoke.add(R.drawable.smoke_8);
-        listOfImagesForSmoke.add(R.drawable.smoke_9);
-        listOfImagesForSmoke.add(R.drawable.smoke_10);
-        listOfImagesForSmoke.add(R.drawable.smoke_11);
-        listOfImagesForSmoke.add(R.drawable.smoke_12);
-        listOfImagesForSmoke.add(R.drawable.smoke_13);
-        listOfImagesForSmoke.add(R.drawable.smoke_14);
-        listOfImagesForSmoke.add(R.drawable.smoke_15);
-        listOfImagesForSmoke.add(R.drawable.smoke_16);
-        listOfImagesForSmoke.add(R.drawable.smoke_17);
-        listOfImagesForSmoke.add(R.drawable.smoke_18);
-        listOfImagesForSmoke.add(R.drawable.smoke_19);
-        listOfImagesForSmoke.add(R.drawable.smoke_20);
-        listOfImagesForSmoke.add(R.drawable.smoke_21);
-        listOfImagesForSmoke.add(R.drawable.smoke_22);
+
 
 
         candle = (ImageView) findViewById(R.id.imageView1);
         flame = (ImageView) findViewById(R.id.imageView2);
         getCamera();
 
-        timerForFlame = new CountDownTimer(30000, 100) {
+        timerForFlame = new CountDownTimer(30000, 50) {
 
             @Override
             public void onTick(long arg0) {
@@ -112,7 +118,7 @@ public class MainActivity extends Activity {
             }
         };
 
-        timerForSmoke = new CountDownTimer(2300, 100) {
+        timerForSmoke = new CountDownTimer(700, 100) {
 
             @Override
             public void onTick(long arg0) {
@@ -167,7 +173,7 @@ public class MainActivity extends Activity {
         }
 
 
-        new CountDownTimer(2000, 1000) {
+       /* new CountDownTimer(2000, 1000) {
 
             @Override
             public void onTick(long arg0) {
@@ -178,10 +184,10 @@ public class MainActivity extends Activity {
             @Override
             public void onFinish() {
                 // TODO Auto-generated method stub
-                candle.setImageResource(R.drawable.lampmain);
+                candle.setImageResource(R.drawable.lamp);
                 startFlame();
             }
-        }.start();
+        }.start();*/
         //	startFlame();
     }
 
@@ -276,6 +282,8 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        turnOffFlash();
     }
 
 
@@ -320,9 +328,7 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
