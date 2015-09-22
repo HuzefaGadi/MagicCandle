@@ -8,6 +8,8 @@ import java.util.concurrent.CountDownLatch;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
@@ -51,21 +54,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT < 16) {
+
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-        else
-        {
-            View decorView = getWindow().getDecorView();
-// Hide the status bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-// Remember that you should never show the action bar if the
-// status bar is hidden, so hide that too if necessary.
-            ActionBar actionBar = getActionBar();
-            actionBar.hide();
-        }
+
         setContentView(R.layout.activity_main);
         listOfImages = new ArrayList<Integer>();
         listOfImagesForSmoke = new ArrayList<Integer>();
@@ -79,6 +71,13 @@ public class MainActivity extends Activity {
         listOfImages.add(R.drawable.candle_fire5);
         listOfImages.add(R.drawable.candle_fire6);
         listOfImages.add(R.drawable.candle_fire7);
+        listOfImages.add(R.drawable.candle_fire8);
+        listOfImages.add(R.drawable.candle_fire9);
+        listOfImages.add(R.drawable.candle_fire10);
+        listOfImages.add(R.drawable.candle_fire11);
+        listOfImages.add(R.drawable.candle_fire12);
+        listOfImages.add(R.drawable.candle_fire13);
+        listOfImages.add(R.drawable.candle_fire14);
 
         listOfImagesForSmoke.add(R.drawable.smoke_1);
         listOfImagesForSmoke.add(R.drawable.smoke_2);
@@ -151,6 +150,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
+
                 if(flameIsRunning)
                 {
                     startSmoke();
@@ -159,6 +159,7 @@ public class MainActivity extends Activity {
                 {
                     startFlame();
                 }
+                candle.setImageDrawable(getResources().getDrawable(R.drawable.lamp));
 
             }
         });
@@ -172,23 +173,20 @@ public class MainActivity extends Activity {
             android.util.Log.e("TrackingFlow", "Exception", e);
         }
 
+        TextView textview = new TextView(this);
+        textview.setText("Tap to switch ON/OFF");
+        textview.setTextSize(20);
+        new AlertDialog.Builder(this)
+                .setTitle("Candle App")
+                .setView(textview)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
 
-       /* new CountDownTimer(2000, 1000) {
-
-            @Override
-            public void onTick(long arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onFinish() {
-                // TODO Auto-generated method stub
-                candle.setImageResource(R.drawable.lamp);
-                startFlame();
-            }
-        }.start();*/
-        //	startFlame();
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     protected void onResume() {
